@@ -227,3 +227,15 @@ int ranges_fixup(request * req);
 int range_parse(request * req, const char *str);
  
 #endif
+
+/* auth */
+#ifdef USE_AUTH
+void auth_add(char *directory,char *file);
+int auth_authorize(request * req);
+void auth_check();
+#endif
+#ifdef DEBUG
+#define DBG(x) x
+#else
+#define DBG(x)
+#endif

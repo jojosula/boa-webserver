@@ -793,6 +793,11 @@ int process_logline(request * req)
 
 int process_header_end(request * req)
 {
+#ifdef USE_AUTH
+    if (!auth_authorize(req))
+        return 0;
+#endif
+
     if (!req->logline) {
         log_error_doc(req);
         fputs("No logline in process_header_end\n", stderr);
@@ -922,6 +927,28 @@ int process_option_line(request * req)
 #ifdef ACCEPT_ON
             add_accept_header(req, value);
 #endif
+            return 1;
+        } 
+        else if (!memcmp(line,"AUTHORIZATION",14) && !req->authorization) {
+            char *user;
+            char *pwd;
+            req->authorization = value;
+            if (!add_cgi_env(req, line, value, 1)){
+                /* errors already logged */
+                return 0;
+            }
+            // accept Basic authorization only
+            if (strncasecmp(req->authorization,"Basic ",6))
+		return 0;
+            base64decode(req->auth_userpass,req->authorization+6,0x100);
+            user = strtok(req->auth_userpass,":");
+            pwd = strtok(NULL ,":");
+            req->auth_type = value;
+            add_cgi_env(req, "AUTH_TYPE", value, 1);
+            req->auth_user = user;
+            add_cgi_env(req, "AUTH_USER", user, 1);
+            req->auth_pass = pwd;
+            add_cgi_env(req, "AUTH_PASSWORD", pwd, 1);
             return 1;
         }
         break;

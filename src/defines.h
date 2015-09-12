@@ -58,6 +58,12 @@
 #define ALIAS_HASHTABLE_SIZE                    17
 #define PASSWD_HASHTABLE_SIZE		        47
 
+#ifdef EMBED
+#define AUTH_HASHTABLE_SIZE 			1
+#else
+#define AUTH_HASHTABLE_SIZE 			47
+#endif
+
 #define REQUEST_TIMEOUT				60
 
 #define MIME_TYPES_DEFAULT                      "/etc/mime.types"
@@ -66,6 +72,10 @@
 /***** CHANGE ANYTHING BELOW THIS LINE AT YOUR OWN PERIL *****/
 /***** You will probably introduce buffer overruns unless you know
        what you are doing *****/
+
+/******************* Authorization ********************/
+/* if need authentication just open it */
+#define USE_AUTH     1
 
 #define MAX_FILE_LENGTH				NAME_MAX
 #define MAX_PATH_LENGTH				PATH_MAX
@@ -180,3 +190,4 @@ extern int debug_level;
 #endif
 
 #endif
+

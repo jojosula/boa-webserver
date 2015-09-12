@@ -291,6 +291,14 @@ static int complete_env(request * req)
         my_add_cgi_env(req, "HTTP_ACCEPT", req->accept);
 #endif
 
+    // custom add CGI env varibles
+    if (req->authorization) {
+        my_add_cgi_env(req, "AUTH_TYPE", req->auth_type);
+        my_add_cgi_env(req, "AUTH_USER", req->auth_user);
+        my_add_cgi_env(req, "AUTH_PASSWORD", req->auth_pass);
+    }
+    // end
+
     if (req->cgi_env_index < CGI_ENV_MAX + 1) {
         req->cgi_env[req->cgi_env_index] = NULL; /* terminate */
         return 1;

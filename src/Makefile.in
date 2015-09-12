@@ -19,12 +19,13 @@ LIBS = @LIBS@
 CFLAGS = @CFLAGS@
 CPPFLAGS = @CPPFLAGS@ -I@srcdir@ -I.
 @ifGNUmake@DEPEND = .depend
+BUILD_DIR = $(CURDIR)/../output
 
 CC = @CC@ 
 CPP = @CPP@
 
-SOURCES = alias.c boa.c buffer.c cgi.c cgi_header.c config.c escape.c \
-	get.c hash.c ip.c log.c mmap_cache.c pipe.c queue.c range.c \
+SOURCES = alias.c auth.c boa.c buffer.c cgi.c cgi_header.c config.c escape.c \
+	get.c hash.c ip.c log.c md5.c mmap_cache.c pipe.c queue.c range.c \
 	read.c request.c response.c signals.c util.c sublog.c \
 	@ASYNCIO_SOURCE@ @ACCESSCONTROL_SOURCE@
 
@@ -34,9 +35,11 @@ all:	boa boa_indexer
 
 boa:	$(OBJS) 
 	$(CC) -o $@ @ALLSOURCES@ $(LDFLAGS) $(LIBS)
+	mv boa $(BUILD_DIR)
 	
 boa_indexer:	index_dir.o escape.o @SCANDIR@ @ALPHASORT@ @STRUTIL@
 	$(CC) -o $@ @ALLSOURCES@ $(LDFLAGS) $(LIBS)
+	mv boa_indexer $(BUILD_DIR)
 
 clean:
 	rm -f $(OBJS) boa core *~ boa_indexer index_dir.o

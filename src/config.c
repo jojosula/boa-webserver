@@ -74,6 +74,7 @@ extern int cgi_nice;            /* boa.c */
 #endif
 
 /* These are new */
+static void c_add_auth(char *v1, char *v2, void *t);
 static void c_add_cgi_env(char *v1, char *v2, void *table_ptr);
 static void c_set_user(char *v1, char *v2, void *t);
 static void c_set_group(char *v1, char *v2, void *t);
@@ -148,6 +149,9 @@ struct ccommand clist[] = {
     {"MimeTypes", S1A, c_add_mime_types_file, NULL},
     {"DefaultType", S1A, c_set_string, &default_type},
     {"DefaultCharset", S1A, c_set_string, &default_charset},
+#ifdef USE_AUTH
+    {"Auth",  S2A, c_add_auth, NULL },
+#endif
     {"AddType", S2A, c_add_mime_type, NULL},
     {"ScriptAlias", S2A, c_add_alias, &script_number},
     {"Redirect", S2A, c_add_alias, &redirect_number},
@@ -166,6 +170,13 @@ struct ccommand clist[] = {
 #endif
     {"CGIEnv", S2A, c_add_cgi_env, NULL},
 };
+
+static void c_add_auth(char *v1, char *v2, void *t)
+{
+#ifdef USE_AUTH
+    auth_add(v1,v2);
+#endif
+}
 
 static void c_add_cgi_env(char *v1, char *v2, void *t)
 {

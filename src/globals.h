@@ -165,6 +165,13 @@ struct request {                /* pending requests */
     char *query_string;         /* env variable */
     char *content_type;         /* env variable */
     char *content_length;       /* env variable */
+    // custom add CGI env varibles
+    char *authorization;	/* env variable */
+    char *auth_type;		/* env variable */
+    char *auth_user;		/* env variable */
+    char *auth_pass;		/* env variable */
+    char auth_userpass[0x80];	/* user's login name + password*/
+    // end
 
     struct mmap_entry *mmap_entry_var;
 
